@@ -87,27 +87,31 @@ function UserList() {
 
   //This Function has the control to add data
   const onAdd = async (user) => {
-    try {
-      const response = await axios.post(
-        "https://jsonplaceholder.typicode.com/users",
-        user
-      );
-      console.log(newUserId);
-      setUsers([
-        ...users,
-        {
-          name: response.data.name,
-          email: response.data.email,
-          id: newUserId + 1,
-        },
-      ]);
-      //Upadte ID for the Upcomming new user
-      setNewUserId(newUserId + 1);
+    if (user.name == undefined && user.email == undefined) {
+      showSnackBar("Plz Add proper UserData", "secondary");
+    } else {
+      try {
+        const response = await axios.post(
+          "https://jsonplaceholder.typicode.com/users",
+          user
+        );
+        console.log(newUserId);
+        setUsers([
+          ...users,
+          {
+            name: response.data.name,
+            email: response.data.email,
+            id: newUserId + 1,
+          },
+        ]);
+        //Upadte ID for the Upcomming new user
+        setNewUserId(newUserId + 1);
 
-      showSnackBar("user Added", "success");
-      setEditingUser(null);
-    } catch (error) {
-      showSnackBar("Error With adding", "error");
+        showSnackBar("user Added", "success");
+        setEditingUser(null);
+      } catch (error) {
+        showSnackBar("Error With adding", "error");
+      }
     }
   };
   return (

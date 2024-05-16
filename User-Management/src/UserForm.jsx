@@ -37,7 +37,7 @@ function UserForm({ editingUser, onEdit, onCancel }) {
             style={{ marginTop: "10px" }}
             name="name"
             label="Name"
-            autoFocus
+            autoFocus={true}
             type="text"
             fullWidth
             value={formData.name}
@@ -47,7 +47,6 @@ function UserForm({ editingUser, onEdit, onCancel }) {
             style={{ marginTop: "10px" }}
             name="email"
             label="Email"
-            autoFocus
             type="email"
             fullWidth
             value={formData.email}
