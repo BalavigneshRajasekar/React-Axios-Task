@@ -13,6 +13,7 @@ import UserItem from "./UserItem";
 import UserForm from "./UserForm";
 
 function UserList() {
+  const [newUserId, setNewUserId] = useState(0);
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [snackbar, setSnackbar] = useState({
@@ -21,21 +22,25 @@ function UserList() {
     severity: "success",
   });
 
+  //When browser Loads It Fetch API data and render
   useEffect(() => {
     fetchUser();
   }, []);
 
+  //Initial Fetch API data and render
   async function fetchUser() {
     try {
       const response = await axios.get(
         "https://jsonplaceholder.typicode.com/users/"
       );
       setUsers(response.data);
+      setNewUserId(response.data.length);
     } catch (error) {
       showSnackBar("not fetched", "error");
     }
   }
 
+  // This Function Has the control to show the SnackBar
   function showSnackBar(message, severity) {
     setSnackbar({
       open: true,
@@ -43,20 +48,24 @@ function UserList() {
       severity,
     });
   }
-
+  // This Function Has the control to hide the SnackBar
   function hideSnackBar() {
     setSnackbar({ ...snackbar, open: false });
   }
 
+  //This Function has the control to delete data
   const onDelete = async (id) => {
     try {
       await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
       setUsers(users.filter((value) => value.id !== id));
 
       showSnackBar("user Deleted", "success");
-    } catch (error) {}
+    } catch (error) {
+      showSnackBar("Error with delete", "error");
+    }
   };
 
+  //This Function has the control to edit data
   const onEdit = async (user) => {
     console.log(user);
     try {
@@ -75,22 +84,26 @@ function UserList() {
 
     setEditingUser(null);
   };
+
+  //This Function has the control to add data
   const onAdd = async (user) => {
     try {
       const response = await axios.post(
         "https://jsonplaceholder.typicode.com/users",
         user
       );
-
+      console.log(newUserId);
       setUsers([
         ...users,
         {
           name: response.data.name,
           email: response.data.email,
-          id: users.length + 1,
+          id: newUserId + 1,
         },
       ]);
-      console.log(users);
+      //Upadte ID for the Upcomming new user
+      setNewUserId(newUserId + 1);
+
       showSnackBar("user Added", "success");
       setEditingUser(null);
     } catch (error) {
@@ -99,17 +112,16 @@ function UserList() {
   };
   return (
     <div>
-      <Container>
-        <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-          <Typography variant="h4" gutterBottom>
+      <Container maxWidth>
+        <Paper elevation={5} style={{ padding: "20px", marginTop: "20px" }}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{ fontStyle: "oblique", letterSpacing: "10px" }}
+          >
             User Management
           </Typography>
-          <Grid
-            container
-            spacing={3}
-            style={{ width: "" }}
-            justifyContent={"space-evenly"}
-          >
+          <Grid container item spacing={0} justifyContent={"space-around"}>
             {users.map((user, index) => (
               <UserItem
                 key={index}
@@ -121,7 +133,7 @@ function UserList() {
           </Grid>
           <Button
             variant="contained"
-            style={{ marginTop: "20px" }}
+            sx={{ marginTop: 10 }}
             onClick={() => setEditingUser({})}
           >
             Add user
