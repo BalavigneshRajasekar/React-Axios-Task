@@ -16,9 +16,12 @@ function UserForm({ editingUser, onEdit, onCancel }) {
       setFormData(editingUser);
     }
   }, []);
+
+  //Added the data to the formData state
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  // This method invoke the callback function which is in UserList component
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
