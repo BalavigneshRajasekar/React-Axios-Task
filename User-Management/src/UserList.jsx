@@ -87,7 +87,12 @@ function UserList() {
 
   //This Function has the control to add data
   const onAdd = async (user) => {
-    if (user.name == undefined && user.email == undefined) {
+    if (
+      user.name == undefined ||
+      user.email == undefined ||
+      user.name == "" ||
+      user.email == ""
+    ) {
       showSnackBar("Plz Add proper UserData", "secondary");
     } else {
       try {
